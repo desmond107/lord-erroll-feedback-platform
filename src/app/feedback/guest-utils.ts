@@ -1,6 +1,7 @@
 "use client";
 
 import type { Lang } from "@/lib/i18n";
+import { turnstileToken } from "./turnstile-client";
 
 export type Draft = {
   v: 1;
@@ -159,6 +160,8 @@ type Outbox = { payload: Record<string, unknown>; photos: string[]; at: number }
 async function post(payload: Record<string, unknown>, photos: Blob[]) {
   const fd = new FormData();
   fd.set("payload", JSON.stringify(payload));
+  // Throws when no token can be had, so the caller retries or queues instead of sending a doomed request.
+  fd.set("cf-turnstile-response", await turnstileToken(String(payload.lang || "en")));
   photos.forEach((p, i) => fd.append("photos", p, `photo-${i + 1}.jpg`));
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 30000);

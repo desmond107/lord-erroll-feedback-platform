@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { assertUser, hashPassword, passwordProblem, verifyPassword } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
@@ -41,6 +42,9 @@ export async function changePassword(current: string, next: string): Promise<R> 
 export async function startTotp(): Promise<R> {
   try {
     const u = await assertUser();
+    // Re-enrolling would silently switch 2FA off; turning it off goes through disableTotp, which asks for the password.
+    const row = await prisma.user.findUniqueOrThrow({ where: { id: u.id }, select: { totpEnabled: true } });
+    if (row.totpEnabled) return { ok: false, error: "Two-factor is already on. Turn it off with your password first." };
     const secret = newSecret();
     // Stored sealed but not enabled until a code is confirmed.
     await prisma.user.update({ where: { id: u.id }, data: { totpSecret: sealSecret(secret), totpEnabled: false } });
@@ -78,9 +82,13 @@ export async function disableTotp(password: string): Promise<R> {
   }
 }
 
-export async function savePrefs(p: { notifyInstant: boolean; digestDaily: boolean; digestWeekly: boolean; digestMonthly: boolean }): Promise<R> {
+// Server actions receive whatever the browser sends, so only these four fields may reach the user row.
+const prefsSchema = z.object({ notifyInstant: z.boolean(), digestDaily: z.boolean(), digestWeekly: z.boolean(), digestMonthly: z.boolean() }).strict();
+
+export async function savePrefs(input: z.infer<typeof prefsSchema>): Promise<R> {
   try {
     const u = await assertUser();
+    const p = prefsSchema.parse(input);
     await prisma.user.update({ where: { id: u.id }, data: p });
     await logActivity(u.id, "settings.updated", null, JSON.stringify(p));
     return { ok: true, message: "Preferences saved." };

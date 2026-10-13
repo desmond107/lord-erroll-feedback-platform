@@ -50,6 +50,7 @@ export async function assign(id: string, assigneeId: string | null): Promise<Res
 export async function toggleFlag(id: string, flag: "starred" | "pinned"): Promise<Result> {
   return guard(async () => {
     const user = await assertUser("manage");
+    if (flag !== "starred" && flag !== "pinned") throw new Error("Unknown flag");
     const f = await prisma.feedback.findUniqueOrThrow({ where: { id }, select: { starred: true, pinned: true } });
     await prisma.feedback.update({ where: { id }, data: { [flag]: !f[flag] } });
     await logActivity(user.id, flag === "starred" ? "feedback.starred" : "feedback.pinned", await ref(id), String(!f[flag]));

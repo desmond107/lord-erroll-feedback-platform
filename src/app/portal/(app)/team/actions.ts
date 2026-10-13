@@ -40,9 +40,12 @@ async function ownersLeft(excludingId: string) {
   return prisma.user.count({ where: { role: "OWNER", active: true, id: { not: excludingId } } });
 }
 
-export async function updateUser(id: string, data: { role?: Role; active?: boolean }): Promise<R> {
+const updateSchema = z.object({ role: z.enum(["OWNER", "MANAGER", "SUPERVISOR"]).optional(), active: z.boolean().optional() }).strict();
+
+export async function updateUser(id: string, input: { role?: Role; active?: boolean }): Promise<R> {
   try {
     const me = await assertUser("users");
+    const data = updateSchema.parse(input);
     const target = await prisma.user.findUniqueOrThrow({ where: { id } });
     const demoting = target.role === "OWNER" && ((data.role && data.role !== "OWNER") || data.active === false);
     if (demoting && (await ownersLeft(id)) === 0) return { ok: false, error: "There must always be at least one active owner." };

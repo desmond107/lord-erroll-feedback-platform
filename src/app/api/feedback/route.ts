@@ -5,6 +5,7 @@ import { feedbackDataFrom, MAX_PHOTO_BYTES, MAX_PHOTOS, notifyNewFeedback, sniff
 import { clientIp, clientUserAgent, hashIp } from "@/lib/request";
 import { rateLimit } from "@/lib/ratelimit";
 import { feedbackRef } from "@/lib/config";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -34,6 +35,10 @@ export async function POST(req: Request) {
   // Honeypot filled in: pretend success so bots learn nothing.
   if (s.website) return NextResponse.json({ ok: true, ref: null });
   if (Date.now() - s.startedAt < MIN_SECONDS * 1000) return NextResponse.json({ error: "too_fast" }, { status: 422 });
+  // The checks above run on values the browser sends; this one a script can't fake.
+  if (!(await verifyTurnstile(String(form.get("cf-turnstile-response") ?? ""), await clientIp()))) {
+    return NextResponse.json({ error: "captcha" }, { status: 403 });
+  }
 
   const visit = new Date(`${s.visitDate}T00:00:00Z`).getTime();
   const now = Date.now();

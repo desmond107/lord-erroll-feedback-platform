@@ -122,7 +122,7 @@ export default function GuestFlow({ qrSection, qrTable, links }: { qrSection: st
     const out = await submitFeedback(payload, photos.map((p) => p.blob));
     setBusy(false);
     if (out.kind === "error") {
-      setError(out.code === "too_fast" ? t.errorSpam : out.code === "rate_limited" ? t.errorRate : t.errorGeneric);
+      setError(out.code === "too_fast" || out.code === "captcha" ? t.errorSpam : out.code === "rate_limited" ? t.errorRate : t.errorGeneric);
       return;
     }
     setQueued(out.kind === "queued");

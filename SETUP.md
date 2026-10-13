@@ -117,6 +117,7 @@ Until a channel is configured its alerts show as *skipped*. The portal still wor
 ## 7. Guest-site protections
 
 - **Spam:** a hidden honeypot field, a minimum completion time, and a per-connection rate limit (40 per hour, generous because restaurant Wi-Fi shares one IP).
+- **Bots:** Cloudflare Turnstile checks every submission once `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set (free at dash.cloudflare.com → Turnstile, widget mode *Managed*). It's invisible to almost every guest. Without it, a script can file fake 1-star reviews, and each one triggers a paid SMS alert. Set both keys before go-live. `NEXT_PUBLIC_…` is built into the page, so redeploy after adding it.
 - **Duplicates:** each submission carries a unique ID, so retries can't double-post. Identical content from the same connection within 15 minutes is ignored. A phone that already submitted from a table in the last 3 hours is gently told so, with a "different visit" option.
 - **Saved progress:** answers are saved on the phone as the guest goes and restored if they return within 12 hours.
 - **Slow connections:** the form is a single light page (about 120 kB of JavaScript) and photos are downscaled before upload. If the connection drops at submit, the feedback is kept on the phone and sent automatically when it reconnects.
