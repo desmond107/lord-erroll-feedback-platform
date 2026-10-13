@@ -1,0 +1,257 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  MANAGER
+  SUPERVISOR
+}
+
+enum FeedbackStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+enum Channel {
+  EMAIL
+  WHATSAPP
+  SMS
+}
+
+enum DeliveryStatus {
+  SENT
+  SKIPPED
+  FAILED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  role          Role      @default(SUPERVISOR)
+  passwordHash  String
+  totpSecret    String?
+  totpEnabled   Boolean   @default(false)
+  active        Boolean   @default(true)
+  digestDaily   Boolean   @default(false)
+  digestWeekly  Boolean   @default(true)
+  digestMonthly Boolean   @default(true)
+  // Receive the instant email for every submission (owner always does via OWNER_NOTIFY_EMAILS).
+  notifyInstant Boolean   @default(false)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions  Session[]
+  notes     Note[]
+  replies   Reply[]
+  assigned  Feedback[]    @relation("assignee")
+  reads     FeedbackRead[]
+  activity  ActivityLog[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // A session that has passed the password step but still owes a TOTP code.
+  pending2fa Boolean  @default(false)
+  ip         String?
+  userAgent  String?
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  // Human-friendly running number, shown as LE-0001.
+  number    Int      @unique @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visitDate DateTime @db.Date
+  section   String
+  table     String?
+  occasion  String?
+
+  overall     Int
+  food        Int?
+  service     Int?
+  ambience    Int?
+  cleanliness Int?
+  value       Int?
+  drinks      Int?
+  speed       Int?
+
+  highlights   String[]
+  improvements String[]
+
+  staffName    String?
+  staffMessage String?
+  suggestion   String?
+  nps          Int?
+
+  guestName  String?
+  guestEmail String?
+  guestPhone String?
+  followUp   Boolean @default(false)
+
+  language    String    @default("en")
+  sentiment   Sentiment @default(NEUTRAL)
+  urgent      Boolean   @default(false)
+  // Idempotency key generated on the guest's device; retries can never create duplicates.
+  clientId    String    @unique
+  ipHash      String?
+  userAgent   String?
+  durationSec Int?
+  isDemo      Boolean   @default(false)
+
+  status       FeedbackStatus @default(NEW)
+  starred      Boolean        @default(false)
+  pinned       Boolean        @default(false)
+  assigneeId   String?
+  assignee     User?          @relation("assignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  resolvedAt   DateTime?
+  firstReadAt  DateTime?
+
+  photos        FeedbackPhoto[]
+  notes         Note[]
+  replies       Reply[]
+  reads         FeedbackRead[]
+  notifications NotificationLog[]
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([section, table])
+  @@index([overall])
+}
+
+// Read receipts are per user, so one manager opening an item doesn't hide it from the owner.
+model FeedbackRead {
+  feedbackId String
+  userId     String
+  readAt     DateTime @default(now())
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([feedbackId, userId])
+}
+
+model FeedbackPhoto {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  mime       String
+  size       Int
+  width      Int?
+  height     Int?
+  data       Bytes
+  createdAt  DateTime @default(now())
+
+  @@index([feedbackId])
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  feedbackId String
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  authorId   String?
+  author     User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  body       String
+  createdAt  DateTime @default(now())
+
+  @@index([feedbackId])
+}
+
+model Reply {
+  id          String         @id @default(cuid())
+  feedbackId  String
+  feedback    Feedback       @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  authorId    String?
+  author      User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  channel     Channel
+  templateKey String?
+  to          String
+  subject     String?
+  body        String
+  status      DeliveryStatus
+  error       String?
+  createdAt   DateTime       @default(now())
+
+  @@index([feedbackId])
+}
+
+model ScanEvent {
+  id        String   @id @default(cuid())
+  section   String
+  // Empty string when the QR code is section-only (NULLs would defeat the unique key).
+  table     String   @default("")
+  // Random per-device id; one scan per device per table per day is counted.
+  visitorId String
+  day       DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@unique([visitorId, section, table, day])
+  @@index([createdAt])
+}
+
+model DiningTable {
+  id      String  @id @default(cuid())
+  section String
+  number  String
+  active  Boolean @default(true)
+
+  @@unique([section, number])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  target    String?
+  detail    String?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([action, createdAt])
+}
+
+model NotificationLog {
+  id         String         @id @default(cuid())
+  channel    Channel
+  kind       String
+  to         String
+  subject    String?
+  status     DeliveryStatus
+  error      String?
+  feedbackId String?
+  feedback   Feedback?      @relation(fields: [feedbackId], references: [id], onDelete: SetNull)
+  createdAt  DateTime       @default(now())
+
+  @@index([createdAt])
+}
+
+// Tracks guest submissions per IP hash for rate limiting.
+model RateBucket {
+  key       String   @id
+  count     Int
+  resetAt   DateTime
+}

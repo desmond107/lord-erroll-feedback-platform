@@ -1,0 +1,65 @@
+{
+  "name": "lord-erroll-feedback",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Guest feedback site and owner portal for The Lord Erroll Gourmet Restaurant",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx --env-file=.env prisma/seed.ts",
+    "db:seed-demo": "tsx --env-file=.env prisma/seed.ts --demo",
+    "db:clear-demo": "tsx --env-file=.env scripts/clear-demo.ts",
+    "owner:create": "tsx --env-file=.env scripts/create-owner.ts",
+    "backup": "tsx --env-file=.env scripts/backup.ts",
+    "qr:zip": "tsx --env-file=.env --conditions=react-server scripts/qr-zip.ts",
+    "smoke": "tsx --env-file=.env scripts/smoke.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "bcryptjs": "^3.0.3",
+    "exceljs": "^4.4.0",
+    "jszip": "^3.10.2",
+    "next": "^15.5.27",
+    "otplib": "^12.0.1",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "server-only": "^0.0.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^20.19.43",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.27",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "esbuild@0.28.2": true,
+    "prisma@6.19.3": true,
+    "unrs-resolver": false
+  },
+  "overrides": {
+    "next": {
+      "postcss": "^8.5.30"
+    },
+    "exceljs": {
+      "uuid": "^11.1.1"
+    }
+  }
+}
