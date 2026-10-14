@@ -104,7 +104,13 @@ export const improvementLabel = (key: string) => IMPROVEMENTS.find((h) => h.key 
 export const URGENT_THRESHOLD = 3;
 
 export function appUrl() {
-  return (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const url = process.env.APP_URL || (vercel ? `https://${vercel}` : "http://localhost:3000");
+  // QR codes are printed from this, so a localhost address in production would ship dead cards.
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL && /\/\/(localhost|127\.)/.test(url)) {
+    throw new Error("APP_URL points at localhost. Set it to the public address before going live.");
+  }
+  return url.replace(/\/$/, "");
 }
 
 export function feedbackUrl(section?: string, table?: string) {

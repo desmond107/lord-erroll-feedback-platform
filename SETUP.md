@@ -22,7 +22,7 @@ Guest feedback site (`/feedback`) and private owner portal (`/portal`) for The L
 
 ```bash
 npm install
-cp .env.example .env            # then fill in DATABASE_URL, AUTH_SECRET, CRON_SECRET
+cp .env.example .env            # then fill in DATABASE_URL, DATABASE_URL_UNPOOLED, AUTH_SECRET, CRON_SECRET
 npx prisma migrate deploy       # create tables
 npm run db:seed                 # default table plan
 npm run db:seed-demo            # OPTIONAL: ~200 sample feedback items + demo logins
@@ -42,7 +42,7 @@ Demo logins (password `LordErroll-demo-2026`): `owner@demo.lord-erroll.local`, `
    - `APP_URL`: the public address, e.g. `https://feedback.lord-erroll.com`. **QR codes are built from this, so set it before printing.**
    - `AUTH_SECRET`: `openssl rand -base64 48`
    - `CRON_SECRET`: `openssl rand -hex 24`
-3. Set the build command to `prisma migrate deploy && npm run build`. Deploy.
+3. `vercel.json` already sets the build command to `prisma migrate deploy && npm run build`, so every deploy applies new migrations. Deploy.
 4. Point a subdomain (e.g. `feedback.lord-erroll.com`) at Vercel in your DNS.
 5. `vercel.json` already schedules the digests at 08:00 Nairobi time: daily, Monday (weekly) and the 1st (monthly). Vercel sends `CRON_SECRET` automatically.
 

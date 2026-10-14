@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { assertUser, hashPassword, passwordProblem, verifyPassword } from "@/lib/auth";
+import { assertUser, destroyOtherSessions, hashPassword, passwordProblem, verifyPassword } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { newSecret, openSecret, sealSecret, totpQrDataUrl, verifyTotp } from "@/lib/totp";
 import { runDigest, type DigestKind } from "@/lib/digest";
@@ -32,8 +32,9 @@ export async function changePassword(current: string, next: string): Promise<R> 
     const problem = passwordProblem(next);
     if (problem) return { ok: false, error: problem };
     await prisma.user.update({ where: { id: u.id }, data: { passwordHash: await hashPassword(next) } });
+    await destroyOtherSessions(u.id);
     await logActivity(u.id, "auth.password_changed");
-    return { ok: true, message: "Password changed." };
+    return { ok: true, message: "Password changed. Any other devices have been signed out." };
   } catch (e) {
     return fail(e);
   }

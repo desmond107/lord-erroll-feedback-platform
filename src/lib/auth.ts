@@ -100,6 +100,12 @@ export async function destroySession() {
   jar.delete(COOKIE);
 }
 
+/** Signs a user out everywhere except this browser, e.g. after a password change. */
+export async function destroyOtherSessions(userId: string) {
+  const token = (await cookies()).get(COOKIE)?.value;
+  await prisma.session.deleteMany({ where: { userId, ...(token ? { tokenHash: { not: sha(token) } } : {}) } });
+}
+
 export async function requireUser(p: Permission = "view"): Promise<SessionUser> {
   const user = await getUser();
   if (!user) redirect("/portal/login");

@@ -1,6 +1,7 @@
 import "server-only";
 import type { Channel, DeliveryStatus } from "@prisma/client";
 import { prisma } from "./db";
+import { rateLimit } from "./ratelimit";
 
 export type SendResult = { status: DeliveryStatus; error?: string };
 
@@ -56,6 +57,12 @@ export async function sendEmail(opts: {
   return result;
 }
 
+// SMS and WhatsApp cost money per message; cap them across all submissions.
+async function underPaidCap(channel: "sms" | "whatsapp") {
+  const cap = Number(process.env.PAID_ALERTS_HOURLY_CAP) || 20;
+  return (await rateLimit(`paid-alert:${channel}`, cap, 3600)).ok;
+}
+
 // ─── SMS (Africa's Talking) ─────────────────────────────────────────────
 
 export async function sendSms(to: string, message: string, kind: string, feedbackId?: string): Promise<SendResult> {
@@ -65,6 +72,8 @@ export async function sendSms(to: string, message: string, kind: string, feedbac
   else if (!AT_USERNAME || !AT_API_KEY) {
     console.info(`[sms:not-configured] → ${to}: ${message}`);
     result = { status: "SKIPPED", error: "Africa's Talking credentials not set" };
+  } else if (!(await underPaidCap("sms"))) {
+    result = { status: "SKIPPED", error: "Hourly SMS cap reached (PAID_ALERTS_HOURLY_CAP)" };
   } else {
     try {
       const host = AT_USERNAME === "sandbox" ? "api.sandbox.africastalking.com" : "api.africastalking.com";
@@ -96,6 +105,8 @@ export async function sendWhatsApp(to: string, summary: string, kind: string, fe
   else if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
     console.info(`[whatsapp:not-configured] → ${to}: ${summary}`);
     result = { status: "SKIPPED", error: "WhatsApp Cloud API credentials not set" };
+  } else if (!(await underPaidCap("whatsapp"))) {
+    result = { status: "SKIPPED", error: "Hourly WhatsApp cap reached (PAID_ALERTS_HOURLY_CAP)" };
   } else {
     try {
       const res = await fetch(`https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`, {

@@ -1,4 +1,5 @@
 {
+  "buildCommand": "prisma migrate deploy && npm run build",
   "crons": [
     { "path": "/api/cron/digest?kind=daily", "schedule": "0 5 * * *" },
     { "path": "/api/cron/digest?kind=weekly", "schedule": "0 5 * * 1" },

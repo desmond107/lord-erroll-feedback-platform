@@ -4,7 +4,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  // Migrations need a direct connection; Neon's pooled URL can hang on them.
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum Role {
@@ -255,3 +257,5 @@ model RateBucket {
   count     Int
   resetAt   DateTime
 }
+
+

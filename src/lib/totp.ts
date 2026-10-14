@@ -2,11 +2,12 @@ import "server-only";
 import crypto from "crypto";
 import { authenticator } from "otplib";
 import QRCode from "qrcode";
+import { authSecret } from "./request";
 
 authenticator.options = { window: 1 };
 
 function key() {
-  return crypto.createHash("sha256").update(`totp:${process.env.AUTH_SECRET || "dev"}`).digest();
+  return crypto.createHash("sha256").update(`totp:${authSecret()}`).digest();
 }
 
 // TOTP secrets are encrypted at rest with AES-256-GCM.
