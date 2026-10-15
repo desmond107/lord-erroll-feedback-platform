@@ -14,10 +14,10 @@ export const RESTAURANT = {
 } as const;
 
 export const SECTIONS = [
-  { slug: "bar-side", en: "Bar side", sw: "Upande wa Baa" },
-  { slug: "west-wing", en: "West Wing", sw: "Mrengo wa Magharibi" },
-  { slug: "east-wing", en: "East Wing", sw: "Mrengo wa Mashariki" },
-  { slug: "clairmont-side", en: "Clairmont side", sw: "Upande wa Clairmont" },
+  { slug: "bar-side", en: "Highlander Lounge", sw: "Highlander Lounge" },
+  { slug: "west-wing", en: "Idina West", sw: "Idina Magharibi" },
+  { slug: "east-wing", en: "Idina East", sw: "Idina Mashariki" },
+  { slug: "clairmont-side", en: "Clairmont/Conservatory", sw: "Clairmont/Conservatory" },
 ] as const;
 export type SectionSlug = (typeof SECTIONS)[number]["slug"];
 export const SECTION_SLUGS = SECTIONS.map((s) => s.slug) as SectionSlug[];

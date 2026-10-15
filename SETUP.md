@@ -13,8 +13,8 @@ Guest feedback site (`/feedback`) and private owner portal (`/portal`) for The L
 | **Owner notification email** | Set to `s@lorderrll.com`, as supplied. The domain looks like a typo of `lord-erroll.com`. Please confirm, because every alert goes here. |
 | **Owner WhatsApp number** | The value supplied was an email address (`reservations@lord-erroll.com`). WhatsApp and SMS alerts need a phone number in `OWNER_ALERT_PHONE`, e.g. `254721920820`. |
 | **Google review link** | Blank. Until `GOOGLE_REVIEW_URL` is set, happy guests are sent to a Google Maps search for the restaurant. Get the real link from Google Business Profile → *Ask for reviews*. |
-| **Table numbers** | The default plan is a placeholder: Bar side 1–8, West Wing 9–20, East Wing 21–32, Clairmont side 33–40. Correct it under **Portal → QR codes** *before* printing cards. |
-| **"Clairmont side"** | Spelling taken from the brief. Edit `src/lib/config.ts` if it should differ. |
+| **Table numbers** | The default plan is a placeholder: Highlander Lounge 1–8, Idina West 9–20, Idina East 21–32, Clairmont/Conservatory 33–40. Correct it under **Portal → QR codes** *before* printing cards. |
+| **Section names** | Highlander Lounge, Idina West, Idina East, Clairmont/Conservatory. Edit `src/lib/config.ts` to rename; the stored slugs stay the same. |
 
 ---
 

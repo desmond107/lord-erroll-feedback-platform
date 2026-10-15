@@ -83,7 +83,7 @@ const NOTES = [
   "Called the guest — very gracious. Invited them back for dinner on the house.",
   "Spoke to the kitchen about mains timing on busy Fridays.",
   "Shared this with the whole team at the morning briefing.",
-  "Bar side speakers turned down from 8pm going forward.",
+  "Highlander Lounge speakers turned down from 8pm going forward.",
   "Checked CCTV — the table was seated 35 minutes late. Host briefed.",
 ];
 
