@@ -11,3 +11,6 @@ qr-export/
 .vercel
 .env*
 !.env.example
+
+# Database backups (contain guest data)
+backups/
