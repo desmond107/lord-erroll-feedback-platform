@@ -8,7 +8,7 @@ import { qrPng } from "./qr";
 // Card wording, shared by the HTML print page and the PDF.
 export const CARD_COPY = {
   title: "Share your experience",
-  line: "It was our pleasure to host you. Scan to tell us about your visit — every word is read by our owner.",
+  line: "It was our pleasure to host you. Scan to tell us about your visit — every word is read by our Management.",
   small: "Scan to share your thoughts",
   time: "About one minute",
 };

@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 
 export const metadata: Metadata = {
   title: { default: "Share Your Experience · The Lord Erroll", template: "%s · The Lord Erroll" },
-  description: "Tell The Lord Erroll Gourmet Restaurant about your visit. Every word is read by our owner.",
+  description: "Tell The Lord Erroll Gourmet Restaurant about your visit. Every word is read by our Management.",
   applicationName: "The Lord Erroll",
   icons: { icon: [{ url: "/favicon.png", sizes: "32x32" }, { url: "/icon-192.png", sizes: "192x192" }], apple: "/apple-icon.png" },
   manifest: "/manifest.webmanifest",

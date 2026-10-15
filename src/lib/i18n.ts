@@ -15,7 +15,7 @@ const en = {
     welcomeTitle: "Thank you for dining with us",
     welcomeLine: "It was our pleasure to host you. Your thoughts help us perfect every visit.",
     welcomeCta: "Share Your Experience",
-    welcomeTime: "About one minute · Every word is read by our owner",
+    welcomeTime: "About one minute · Every word is read by our Management",
     resumeNote: "We kept your answers safe — carry on where you left off.",
     startOver: "Start afresh",
 
@@ -74,15 +74,15 @@ const en = {
 
     thanksTitle: "With our sincere thanks",
     thanksHigh:
-      "It is a true pleasure to know your evening was a fine one. Your words have gone straight to our owner, and we look forward to welcoming you back to the Lord Erroll very soon.",
+      "It is a true pleasure to know your evening was a fine one. Your words have gone straight to our Management, and we look forward to welcoming you back to the Lord Erroll very soon.",
     thanksReviewAsk: "Would you share a few words with other diners?",
     thanksReview: "Leave a Google review",
     thanksFollow: "Follow us on Instagram",
     thanksLow:
-      "We are truly sorry that your visit fell short of the standard you deserve — and the standard we hold ourselves to. Your feedback has gone directly to our owner, who reads every word personally.",
+      "We are truly sorry that your visit fell short of the standard you deserve — and the standard we hold ourselves to. Your feedback has gone directly to our Management, who read every word personally.",
     thanksLowPromise: "If you left your details, a member of our management team will be in touch within one day to make things right.",
     thanksLowNoContact: "Should you wish to speak with us directly, we would be grateful for the chance:",
-    thanksMid: "Thank you for taking the time. Every comment is read by our owner and helps us refine the experience.",
+    thanksMid: "Thank you for taking the time. Every comment is read by our Management and helps us refine the experience.",
     thanksQueued: "You appear to be offline. Your feedback is saved on this phone and will be sent automatically once you're connected.",
     thanksDone: "Close",
     shareAnother: "Leave feedback for another visit",
@@ -109,7 +109,7 @@ const sw: typeof en = {
     welcomeTitle: "Asante kwa kula nasi",
     welcomeLine: "Ilikuwa furaha yetu kukukaribisha. Maoni yako hutusaidia kuboresha kila ziara.",
     welcomeCta: "Shiriki Uzoefu Wako",
-    welcomeTime: "Takriban dakika moja · Kila neno husomwa na mmiliki wetu",
+    welcomeTime: "Takriban dakika moja · Kila neno husomwa na Uongozi wetu",
     resumeNote: "Tumehifadhi majibu yako — endelea ulipoachia.",
     startOver: "Anza upya",
 
@@ -168,15 +168,15 @@ const sw: typeof en = {
 
     thanksTitle: "Kwa shukrani za dhati",
     thanksHigh:
-      "Ni furaha kubwa kujua kwamba ziara yako ilikuwa nzuri. Maneno yako yamemfikia mmiliki wetu moja kwa moja, na tunatarajia kukukaribisha tena Lord Erroll hivi karibuni.",
+      "Ni furaha kubwa kujua kwamba ziara yako ilikuwa nzuri. Maneno yako yamefikia Uongozi wetu moja kwa moja, na tunatarajia kukukaribisha tena Lord Erroll hivi karibuni.",
     thanksReviewAsk: "Ungependa kuwashirikisha wageni wengine maneno machache?",
     thanksReview: "Andika maoni Google",
     thanksFollow: "Tufuate Instagram",
     thanksLow:
-      "Tunasikitika sana kwamba ziara yako haikufikia kiwango unachostahili — na kiwango tunachojiwekea. Maoni yako yamemfikia mmiliki wetu moja kwa moja, ambaye husoma kila neno mwenyewe.",
+      "Tunasikitika sana kwamba ziara yako haikufikia kiwango unachostahili — na kiwango tunachojiwekea. Maoni yako yamefikia Uongozi wetu moja kwa moja, ambao husoma kila neno wenyewe.",
     thanksLowPromise: "Ikiwa uliacha maelezo yako, mmoja wa uongozi wetu atawasiliana nawe ndani ya siku moja ili kurekebisha mambo.",
     thanksLowNoContact: "Ukipenda kuzungumza nasi moja kwa moja, tutashukuru kwa nafasi hiyo:",
-    thanksMid: "Asante kwa muda wako. Kila maoni husomwa na mmiliki wetu na hutusaidia kuboresha huduma.",
+    thanksMid: "Asante kwa muda wako. Kila maoni husomwa na Uongozi wetu na hutusaidia kuboresha huduma.",
     thanksQueued: "Inaonekana huna mtandao. Maoni yako yamehifadhiwa kwenye simu hii na yatatumwa yenyewe utakapounganishwa.",
     thanksDone: "Funga",
     shareAnother: "Toa maoni kuhusu ziara nyingine",
