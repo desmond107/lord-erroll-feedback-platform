@@ -9,7 +9,6 @@ import { qrPng } from "./qr";
 export const CARD_COPY = {
   title: "Share your experience",
   line: "It was our pleasure to host you. Scan to tell us about your visit — every word is read by our owner.",
-  swahili: "Shiriki uzoefu wako",
   small: "Scan to share your thoughts",
   time: "About one minute",
 };
@@ -86,7 +85,6 @@ export async function qrCardsPdf(cards: CardSpec[], size: "table" | "bill") {
       cy -= mm(8);
       centre(page, CARD_COPY.title, x, layout.w, cy, 17, serifItalic, GREEN);
       cy -= mm(4.6);
-      centre(page, CARD_COPY.swahili, x, layout.w, cy, 9, serifItalic, MUTED);
       const q = mm(54);
       cy -= mm(3) + q;
       page.drawRectangle({ x: x + (layout.w - q) / 2 - 4, y: cy - 4, width: q + 8, height: q + 8, color: rgb(1, 1, 1), borderColor: GOLD, borderWidth: 0.6 });
@@ -111,7 +109,6 @@ export async function qrCardsPdf(cards: CardSpec[], size: "table" | "bill") {
       page.drawText("Share your", { x: tx, y: y + mm(25), size: 12, font: serifItalic, color: GREEN });
       page.drawText("experience", { x: tx, y: y + mm(20.5), size: 12, font: serifItalic, color: GREEN });
       page.drawText(CARD_COPY.small, { x: tx, y: y + mm(16), size: 5.6, font: sans, color: MUTED });
-      page.drawText(CARD_COPY.swahili, { x: tx, y: y + mm(12.8), size: 6.5, font: serifItalic, color: MUTED });
       page.drawText(where.toUpperCase(), { x: tx, y: y + inset + mm(3.5), size: 4.8, font: sans, color: GOLDINK });
     }
   }

@@ -49,7 +49,6 @@ export default async function QrPrint({ searchParams }: { searchParams: Promise<
                   <div className="mt-[1.2mm] text-[6pt] tracking-[0.3em] text-[#87661c] uppercase">Gourmet Restaurant</div>
                   <div className="gold-rule my-[3mm] w-[34mm] text-[#C9A24B]"><Fleur className="h-[3mm] w-[3mm]" /></div>
                   <div className="font-serif text-[19pt] leading-tight text-[#1F5E3A] italic">{CARD_COPY.title}</div>
-                  <div className="font-serif text-[10pt] text-[#625f57] italic">{CARD_COPY.swahili}</div>
                   <div className="qr mt-[3mm] h-[44mm] w-[44mm] border border-[#C9A24B] bg-white p-[1.5mm]" dangerouslySetInnerHTML={{ __html: c.svg }} />
                   <p className="mt-[3mm] text-[7pt] leading-snug text-[#625f57]">{CARD_COPY.line}</p>
                   <div className="mt-auto text-[6.5pt] tracking-[0.18em] text-[#87661c] uppercase">{c.label}</div>
@@ -66,7 +65,6 @@ export default async function QrPrint({ searchParams }: { searchParams: Promise<
                     </div>
                     <div className="mt-auto font-serif text-[12pt] leading-tight text-[#1F5E3A] italic">{CARD_COPY.title}</div>
                     <div className="text-[5.6pt] text-[#625f57]">{CARD_COPY.small} · {CARD_COPY.time}</div>
-                    <div className="font-serif text-[6.5pt] text-[#625f57] italic">{CARD_COPY.swahili}</div>
                     <div className="mt-[1.5mm] text-[4.8pt] tracking-[0.16em] text-[#87661c] uppercase">{c.label}</div>
                   </div>
                   <div className="qr h-[38mm] w-[38mm] shrink-0 bg-white p-[1mm]" dangerouslySetInnerHTML={{ __html: c.svg }} />
